@@ -32,7 +32,7 @@
   - won
   - lost
   - paused
-- priority4
+- priority
 - expectedCloseDate
 - description
 - createdAt
