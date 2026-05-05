@@ -14,7 +14,7 @@ const clientSchema = new mongoose.Schema({
   },
   contactName: {
     type: String,
-    trim
+    trim: true,
   },
   email: {
     type: String,

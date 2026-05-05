@@ -1,6 +1,9 @@
 import express from 'express';
 
 import healthRoutes from './routes/healthRoutes.js';
+import clientRoutes from './routes/clientRoutes.js';
+import noteRoutes from './routes/noteRoutes.js';
+import opportunityRoutes from './routes/opportunityRoutes.js';
 import notFound from './middleware/notFound.js';
 import errorHandler from './middleware/errorHandler.js';
 
@@ -20,10 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // establish health route
 app.use('/health', healthRoutes);
-
-// app.get('/health', (req, res) => {
-//   res.status(200).json({ status: 'OK' });
-// });
+app.use('/api/clients', clientRoutes);
+app.use('/api/opportunities', opportunityRoutes);
+app.use('/api/notes', noteRoutes);
 
 // register error handling middleware
 app.use(notFound);
