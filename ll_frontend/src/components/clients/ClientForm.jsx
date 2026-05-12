@@ -18,29 +18,31 @@ export const ClientForm = ({ onCreateClient }) => {
   };
 
   return (
-    <section>
+    <section className="card client-form-card">
       <h2>Add New Client</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form onSubmit={handleSubmit} className="form">
+        <div className="form-group">
           <label>Name:</label>
-          <input value={name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
+          <input name="name" value={name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
         </div>
-        <div>
+        <div className="form-group">
           <label>Type:</label>
           <select name="type" id="type" value={type} onChange={(e) => setFormData({...formData, type: e.target.value})}>
             <option value="individual">Individual</option>
             <option value="business">Business</option>
           </select>
         </div>
-        <div>
+        <div className="form-group">
           <label>Status:</label>
           <select name="status" id="status" value={status} onChange={(e) => setFormData({...formData, status: e.target.value})}>
             <option value="lead">Lead</option>
-            <option value="customer">Customer</option>
+            <option value="active">Active</option>
             <option value="inactive">Inactive</option>
+            <option value="lost">Lost</option>
+            <option value="archived">Archived</option>
           </select>
         </div>
-        <button type="submit">Add Client</button>
+        <button type="submit" className="button button-primary">Add Client</button>
       </form>
     </section>
   );

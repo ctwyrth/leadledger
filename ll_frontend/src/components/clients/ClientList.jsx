@@ -6,12 +6,12 @@ export const ClientList = ({ clients }) => {
   }
 
   return (
-    <section>
+    <section className="client-layout">
       {clients.map((client) => (
-        <article key={client._id}>
+        <article key={client._id} className="card client-card">
           <h2>{client.name}</h2>
           <p>Type: {client.type}</p>
-          <p>Status: {client.status}</p>
+          <span className={`status-badge status-${client.status}`}>Status: {client.status}</span>
         </article>
       ))}
     </section>

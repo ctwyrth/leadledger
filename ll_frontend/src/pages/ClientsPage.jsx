@@ -40,10 +40,17 @@ export const ClientsPage = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <main>
-      <h1>Clients</h1>
-      <ClientForm onCreateClient={handleCreateClient} />
-      <ClientList clients={clients} />
-    </main>
+    <>
+      <header className="page-header">
+        <h1>LeadLedger CRM</h1>
+      </header>
+      <main className="clients-page">
+        <h2>Clients</h2>
+        <div className="clients-sub">
+          <ClientForm onCreateClient={handleCreateClient} />
+          <ClientList clients={clients} />
+        </div>
+      </main>
+    </>
   );
 }
