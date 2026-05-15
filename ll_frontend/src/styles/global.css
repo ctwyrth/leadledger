@@ -10,18 +10,18 @@ body {
   color: #172033;
 }
 
-.clients-page {
+.clients-page, .opportunities-page {
   min-height: 100vh;
   max-width: 1200px;
-  margin: 100px auto 100px auto;
+  margin: 40px auto 50px auto;
   padding: 10px;
 }
 
-.clients-page h2 {
+.clients-page h2, .opportunities-page h2 {
   margin-bottom: 20px;
 }
 
-.clients-sub {
+.clients-sub, .opportunities-sub {
   display: grid;
   grid-template-columns: 360px 1fr;
   align-items: start;
@@ -29,7 +29,7 @@ body {
 }
 
 @media (max-width: 768px) {
-  .clients-sub {
+  .clients-sub, .opportunities-sub {
     grid-template-columns: 1fr;
   }
 }
@@ -42,7 +42,7 @@ body {
   text-align: center;
 }
 
-.client-layout {
+.client-layout, .opportunity-layout {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 16px;
@@ -57,7 +57,7 @@ body {
   margin-bottom: 40px;
 }
 
-.client-card {
+.client-card, .opportunity-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -105,7 +105,7 @@ body {
   border-radius: 4px;
 }
 
-.client-form-card {
+.client-form-card, .opportunity-form-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -114,7 +114,7 @@ body {
   background-color: white;
 }
 
-.client-form-card h2 {
+.client-form-card h2, .opportunity-form-card h2 {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
