@@ -55,11 +55,11 @@ const updateOpportunity = (req, res) => {
 const deleteOpportunity = (req, res) => {
   const opportunityId = req.params.id;
   Opportunity.findByIdAndDelete(opportunityId)
-    .then(() => {
+    .then((opportunity) => {
       if (!opportunity) {
         return res.status(404).json({ message: "[ERROR] Opportunity not found" });
       }
-      res.status(200).json({ message: `[STATUS] Opportunity deleted with ID ${opportunityId}` });
+      res.status(200).json({ message: `[STATUS] Opportunity deleted with ID ${opportunityId}`, data: opportunity });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error deleting opportunity", error: error.message });

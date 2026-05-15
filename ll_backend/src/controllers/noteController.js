@@ -53,11 +53,11 @@ const updateNote = (req, res) => {
 const deleteNote = (req, res) => {
   const noteId = req.params.id;
   Note.findByIdAndDelete(noteId)
-    .then(() => {
+    .then((note) => {
       if (!note) {
         return res.status(404).json({ message: "[ERROR] Note not found" });
       }
-      res.status(200).json({ message: `[STATUS] Note deleted with ID ${noteId}` });
+      res.status(200).json({ message: `[STATUS] Note deleted with ID ${noteId}`, data: note });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error deleting note", error: error.message });

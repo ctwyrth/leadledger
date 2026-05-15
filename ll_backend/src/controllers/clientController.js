@@ -55,8 +55,11 @@ const updateClient = (req, res) => {
 const deleteClient = (req, res) => {
   const clientId = req.params.id;
   Client.findByIdAndDelete(clientId)
-    .then(() => {
-      res.status(200).json({ message: `[STATUS] Client deleted with ID ${clientId}` });
+    .then((client) => {
+      if (!client) {
+        return res.status(404).json({ message: "[ERROR] Client not found" });
+      }
+      res.status(200).json({ message: `[STATUS] Client deleted with ID ${clientId}`, data: client });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error deleting client", error: error.message });
