@@ -13,15 +13,15 @@ export const OpportunitiesPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const handleCreateOpportunity = (opportunityData) => {
-    createOpportunity(opportunityData)
-      .then(newOpportunity => {
-        setOpportunities(prevOpportunities => [...prevOpportunities, newOpportunity]);
-      })
-      .catch(err => {
-        console.error('Error creating opportunity:', err);
-        setError('Failed to create opportunity');
-      });
+  const handleCreateOpportunity = async (opportunityData) => {
+    try {
+      await createOpportunity(opportunityData)
+      const updatedOpportunities = await getOpportunities();
+      setOpportunities(updatedOpportunities);
+    } catch (err) {
+      console.error('Error creating opportunity:', err);
+      setError('Failed to create opportunity');
+    }
   };
 
   useEffect(() => {
