@@ -55,9 +55,6 @@ export const OpportunitiesPage = () => {
 
   return (
     <>
-      <header className="page-header">
-        <h1>LeadLedger CRM</h1>
-      </header>
       <main className="opportunities-page">
         <h2>Opportunities</h2>
         <div className="opportunities-sub">

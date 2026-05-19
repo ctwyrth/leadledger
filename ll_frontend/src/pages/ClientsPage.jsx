@@ -41,9 +41,6 @@ export const ClientsPage = () => {
 
   return (
     <>
-      <header className="page-header">
-        <h1>LeadLedger CRM</h1>
-      </header>
       <main className="clients-page">
         <h2>Clients</h2>
         <div className="clients-sub">
