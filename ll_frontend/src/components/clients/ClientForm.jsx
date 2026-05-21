@@ -1,8 +1,7 @@
 // basic form component to enter new client information
+import { useState, useEffect } from "react";
 
-import { useState } from "react";
-
-export const ClientForm = ({ onCreateClient }) => {
+export const ClientForm = ({ onCreateClient, onUpdateClient, editingClient }) => {
   const [formData, setFormData] = useState({
     name: '',
     type: 'individual',
@@ -11,15 +10,25 @@ export const ClientForm = ({ onCreateClient }) => {
 
   const { name, type, status } = formData;
 
+  useEffect(() => {
+    if (editingClient) {
+      setFormData(editingClient);
+    }
+  }, [editingClient]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onCreateClient(formData);
+    if (editingClient) {
+      onUpdateClient(editingClient._id, formData);
+    } else {
+      onCreateClient(formData);
+    }
     setFormData({ name: '', type: 'individual', status: 'lead' }); // reset form
   };
 
   return (
     <section className="card client-form-card">
-      <h2>Add New Client</h2>
+      <h2>{editingClient ? 'Edit Client' : 'Add New Client'}</h2>
       <form onSubmit={handleSubmit} className="form">
         <div className="form-group">
           <label>Name:</label>
@@ -42,7 +51,7 @@ export const ClientForm = ({ onCreateClient }) => {
             <option value="archived">Archived</option>
           </select>
         </div>
-        <button type="submit" className="button button-primary">Add Client</button>
+        <button type="submit" className="button button-primary">{editingClient ? 'Edit Client' : 'Add New Client'}</button>
       </form>
     </section>
   );

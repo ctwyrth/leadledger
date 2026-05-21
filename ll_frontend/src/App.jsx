@@ -8,7 +8,7 @@ export const App = () => {
 
   return (
     <>
-      <header className="page-header">
+      <header className="app-header">
         <h1>LeadLedger CRM</h1>
 
         <nav>

@@ -28,3 +28,35 @@ export const createClient = async (clientData) => {
 
   return result.data;
 };
+
+export const deleteClient = async (clientId) => {
+  const response = await fetch(`/api/clients/${clientId}`, {
+    method: 'DELETE'
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to delete client');
+  }
+
+  const result = await response.json();
+
+  return result.data;
+};
+
+export const updateClient = async (clientId, clientData) => {
+  const response = await fetch(`/api/clients/${clientId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(clientData)
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to update client');
+  }
+
+  const result = await response.json();
+
+  return result.data;
+};

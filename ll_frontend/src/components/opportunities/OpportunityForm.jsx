@@ -1,8 +1,7 @@
 // form to add an opportunity to the system
+import { useState, useEffect } from "react";
 
-import { useState } from "react";
-
-export const OpportunityForm = ({ onCreateOpportunity, clients }) => {
+export const OpportunityForm = ({ onCreateOpportunity, onUpdateOpportunity, editingOpportunity, clients }) => {
     const [formData, setFormData] = useState({
     title: '',
     client: clients.length ? clients[0]._id : '',
@@ -12,15 +11,25 @@ export const OpportunityForm = ({ onCreateOpportunity, clients }) => {
 
   const { title, client, value, stage } = formData;
 
+  useEffect(() => {
+    if (editingOpportunity) {
+      setFormData(editingOpportunity);
+    }
+  }, [editingOpportunity]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    onCreateOpportunity(formData);
+    if (editingOpportunity) {
+      onUpdateOpportunity(editingOpportunity._id, formData);
+    } else {
+      onCreateOpportunity(formData);
+    }
     setFormData({ title: '', client: clients.length ? clients[0]._id : '', value: '', stage: 'new' }); // reset form
   };
 
   return (
     <section className="card opportunity-form-card">
-      <h2>Add New Opportunity</h2>
+      <h2>{editingOpportunity ? 'Edit Opportunity' : 'Add New Opportunity'}</h2>
       <form onSubmit={handleSubmit} className="form">
         <div className="form-group">
           <label>Title:</label>
@@ -49,7 +58,7 @@ export const OpportunityForm = ({ onCreateOpportunity, clients }) => {
             <option value="paused">Paused</option>
           </select>
         </div>
-        <button type="submit" className="button button-primary">Add Opportunity</button>
+        <button type="submit" className="button button-primary">{editingOpportunity ? 'Update Opportunity' : 'Add New Opportunity'}</button>
       </form>
     </section>
   );

@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { ClientList } from '../components/clients/ClientList';
 import { ClientForm } from '../components/clients/ClientForm';
-import { getClients, createClient } from '../api/clientApi';
+import { getClients, createClient, deleteClient, updateClient } from '../api/clientApi';
 
 export const ClientsPage = () => {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [editingClient, setEditingClient] = useState(null);
 
   const handleCreateClient = (clientData) => {
     createClient(clientData)
@@ -18,6 +19,33 @@ export const ClientsPage = () => {
       .catch(err => {
         console.error('Error creating client:', err);
         setError('Failed to create client');
+      });
+  };
+
+  const handleDeleteClient = (clientId) => {
+    deleteClient(clientId)
+      .then(data => {
+        setClients(prevClients => prevClients.filter(client => client._id !== clientId));
+      })
+      .catch(err => {
+        console.error('Error deleting client:', err);
+        setError('Failed to delete client');
+      });
+  };
+
+  const handleEditClient = (client) => {
+    setEditingClient(client);
+  };
+
+  const handleUpdateClient = (clientId, clientData) => {
+    updateClient(clientId, clientData)
+      .then(updatedClient => {
+        setClients(prevClients => prevClients.map(client => client._id === clientId ? updatedClient : client));
+        setEditingClient(null);
+      })
+      .catch(err => {
+        console.error('Error updating client:', err);
+        setError('Failed to update client');
       });
   };
 
@@ -44,8 +72,8 @@ export const ClientsPage = () => {
       <main className="clients-page">
         <h2>Clients</h2>
         <div className="clients-sub">
-          <ClientForm onCreateClient={handleCreateClient} />
-          <ClientList clients={clients} />
+          <ClientForm onCreateClient={handleCreateClient} onUpdateClient={handleUpdateClient} editingClient={editingClient} />
+          <ClientList clients={clients} onDeleteClient={handleDeleteClient} onEditClient={handleEditClient} />
         </div>
       </main>
     </>
