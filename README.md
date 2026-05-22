@@ -25,3 +25,6 @@ This project demonstrates a full-stack MERN application focused on practical bus
 
 ## Project Status
 In Development.
+
+### Milestones
+5.22.2026 - Functional CRM MVP - working under commit 11.
