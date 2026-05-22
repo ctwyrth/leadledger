@@ -16,8 +16,11 @@ export const OpportunitiesPage = () => {
 
   const handleCreateOpportunity = (opportunityData) => {
     createOpportunity(opportunityData)
-      .then(newOpportunity => {
-        setOpportunities(prevOpportunities => [...prevOpportunities, newOpportunity]);
+      .then(() => {
+        return getOpportunities();
+      })
+      .then(updatedOpportunities => {
+        setOpportunities(updatedOpportunities);
       })
       .catch(err => {
         console.error('Error creating opportunity:', err);

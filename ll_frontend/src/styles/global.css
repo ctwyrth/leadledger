@@ -33,14 +33,16 @@ body {
   padding: 5px 10px;
   border: none;
   border-radius: 4px;
+  background-color: midnightblue;
+  color: white;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
 }
 
-.nav-button.active:hover, .nav-button.inactive:hover {
-  background-color: rgb(51, 51, 226);
-  color: white;
+.nav-button:hover {
+  background-color: white;
+  color: midnightblue;
 }
 
 .nav-button.active {
@@ -48,19 +50,19 @@ body {
   color: midnightblue;
 }
 
-.nav-button.inactive {
+/* .nav-button.inactive {
   background-color: #ccc;
   color: #666;
-}
+} */
 
-.clients-page, .opportunities-page {
+.clients-page, .opportunities-page, .dashboard-page {
   min-height: 100vh;
   max-width: 1200px;
   margin: 30px auto 50px auto;
   padding: 10px;
 }
 
-.clients-page h2, .opportunities-page h2 {
+.clients-page h2, .opportunities-page h2, .dashboard-page h2 {
   margin-bottom: 20px;
 }
 
@@ -69,6 +71,12 @@ body {
   grid-template-columns: 360px 1fr;
   align-items: start;
   gap: 24px;
+}
+
+.dashboard-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 @media (max-width: 768px) {
@@ -104,7 +112,7 @@ body {
   margin-bottom: 40px;
 }
 
-.client-card, .opportunity-card {
+.client-card, .opportunity-card, .dashboard-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -112,6 +120,26 @@ body {
   width: auto;
   padding: 20px;
   margin: 0;
+}
+
+.dashboard-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  width: 85%;
+  margin: 0 auto;
+}
+
+.dashboard-card h3 {
+  margin-bottom: 10px;
+}
+
+.dashboard-card p {
+  margin-top: 5px;
+  font-size: 22px;
+  font-weight: bold;
+  color: rgb(146, 232, 17);
 }
 
 .card-nav {

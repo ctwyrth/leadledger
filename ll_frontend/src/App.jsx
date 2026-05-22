@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
+import { DashboardPage } from './pages/DashboardPage';
 import { ClientsPage } from './pages/ClientsPage';
 import { OpportunitiesPage } from './pages/OpportunitiesPage';
 
 export const App = () => {
-  const [activePage, setActivePage] = useState('clients');
+  const [activePage, setActivePage] = useState('dashboard');
 
   return (
     <>
@@ -12,10 +13,12 @@ export const App = () => {
         <h1>LeadLedger CRM</h1>
 
         <nav>
-          <button className={`nav-button ${activePage === 'clients' ? 'active' : 'inactive'}`} onClick={() => setActivePage('clients')}>Clients</button>
-          <button className={`nav-button ${activePage === 'opportunities' ? 'active' : 'inactive'}`} onClick={() => setActivePage('opportunities')}>Opportunities</button>
+          <button type="button" className={`nav-button ${activePage === 'dashboard' ? 'active' : ''}`} onClick={() => setActivePage('dashboard')}>Dashboard</button>
+          <button type="button" className={`nav-button ${activePage === 'clients' ? 'active' : ''}`} onClick={() => setActivePage('clients')}>Clients</button>
+          <button type="button" className={`nav-button ${activePage === 'opportunities' ? 'active' : ''}`} onClick={() => setActivePage('opportunities')}>Opportunities</button>
         </nav>
       </header>
+      {activePage === 'dashboard' && <DashboardPage />}
       {activePage === 'clients' && <ClientsPage />}
       {activePage === 'opportunities' && <OpportunitiesPage />}
     </>
