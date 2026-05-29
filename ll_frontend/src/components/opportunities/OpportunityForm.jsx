@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 export const OpportunityForm = ({ onCreateOpportunity, onUpdateOpportunity, editingOpportunity, clients }) => {
     const [formData, setFormData] = useState({
     title: '',
-    client: clients.length ? clients[0]._id : '',
+    client: '',
     value: '',
     stage: 'new'
   });
@@ -13,17 +13,40 @@ export const OpportunityForm = ({ onCreateOpportunity, onUpdateOpportunity, edit
 
   useEffect(() => {
     if (editingOpportunity) {
-      setFormData(editingOpportunity);
+      setFormData({
+        title: editingOpportunity.title || '',
+        client: editingOpportunity.client?._id || editingOpportunity.client || '',
+        value: editingOpportunity.value || '',
+        stage: editingOpportunity.stage || 'new'
+      });
+      // setFormData(editingOpportunity); --- IGNORE ---
+    }
+  
+    if (!editingOpportunity && clients.length && !formData.client) {
+      setFormData(prevData => ({
+        ...prevData,
+        client: ''
+      }));
     }
   }, [editingOpportunity]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!formData.client) {
+      alert('Please select a client for this opportunity.');
+      return;
+    }
+
     if (editingOpportunity) {
       onUpdateOpportunity(editingOpportunity._id, formData);
     } else {
       onCreateOpportunity(formData);
     }
+
+    setFormData({ title: '', client: clients.length ? clients[0]._id : '', value: '', stage: 'new' }); // reset form
+  };
+
+  const onCancel = () => {
     setFormData({ title: '', client: clients.length ? clients[0]._id : '', value: '', stage: 'new' }); // reset form
   };
 
@@ -33,11 +56,12 @@ export const OpportunityForm = ({ onCreateOpportunity, onUpdateOpportunity, edit
       <form onSubmit={handleSubmit} className="form">
         <div className="form-group">
           <label>Title:</label>
-          <input name="title" value={title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
+          <input name="title" value={title} onChange={(e) => setFormData({...formData, title: e.target.value})} required />
         </div>
         <div className="form-group">
           <label>Client:</label>
-          <select name="client" id="client" value={client} onChange={(e) => setFormData({...formData, client: e.target.value})}>
+          <select name="client" id="client" value={client} onChange={(e) => setFormData({...formData, client: e.target.value})} required>
+            <option value="">Select a client...</option>
             {clients.map((client) => (
               <option key={client._id} value={client._id}>{client.name}</option>
             ))}
@@ -59,6 +83,7 @@ export const OpportunityForm = ({ onCreateOpportunity, onUpdateOpportunity, edit
           </select>
         </div>
         <button type="submit" className="button button-primary">{editingOpportunity ? 'Update Opportunity' : 'Add New Opportunity'}</button>
+        {editingOpportunity && <button type="button" className="button button-secondary" onClick={() => setFormData({ title: '', client: clients.length ? clients[0]._id : '', value: '', stage: 'new' })}>Cancel</button>}
       </form>
     </section>
   );
