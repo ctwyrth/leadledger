@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { ClientList } from '../components/clients/ClientList';
 import { ClientForm } from '../components/clients/ClientForm';
+import { ClientDetails } from './ClientDetails';
 import { getClients, createClient, deleteClient, updateClient } from '../api/clientApi';
 
 export const ClientsPage = () => {
@@ -10,6 +11,15 @@ export const ClientsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingClient, setEditingClient] = useState(null);
+  const [viewingClientId, setViewingClientId] = useState(null);
+
+  const handleViewClient = (clientId) => {
+    setViewingClientId(clientId);
+  };
+
+  const handleBackToClients = () => {
+    setViewingClientId(null);
+  };
 
   const handleCreateClient = (clientData) => {
     createClient(clientData)
@@ -67,13 +77,17 @@ export const ClientsPage = () => {
   if (loading) return <div>Loading clients...</div>;
   if (error) return <div>{error}</div>;
 
+  if (viewingClientId) {
+    return <ClientDetails clientId={viewingClientId} onBack={handleBackToClients} />;
+  }
+
   return (
     <>
       <main className="clients-page">
         <h2>Clients</h2>
         <div className="clients-sub">
           <ClientForm onCreateClient={handleCreateClient} onUpdateClient={handleUpdateClient} editingClient={editingClient} />
-          <ClientList clients={clients} onDeleteClient={handleDeleteClient} onEditClient={handleEditClient} />
+          <ClientList clients={clients} onDeleteClient={handleDeleteClient} onEditClient={handleEditClient} onViewClient={handleViewClient} />
         </div>
       </main>
     </>

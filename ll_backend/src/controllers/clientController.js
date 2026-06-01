@@ -1,4 +1,6 @@
 import Client from '../models/Client.js';
+import Opportunity from '../models/Opportunity.js';
+import Note from '../models/Note.js';
 
 // setting up controllers for client routes
 const getAllClients = (req, res) => {
@@ -26,6 +28,42 @@ const getClientById = (req, res) => {
     });
 };
 
+const getClientOpportunities = (req, res) => {
+  const clientId = req.params.id;
+  
+  Opportunity.find({ client: clientId })
+    .then(opportunities => {
+      res.status(200).json({
+        message: `[STATUS] Get opportunities for client ID ${clientId}`,
+        data: opportunities,
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "[ERROR] Error fetching client opportunities",
+        error: error.message,
+      });
+    });
+};
+
+const getClientNotes = (req, res) => {
+  const clientId = req.params.id;
+  
+  Note.find({ client: clientId })
+    .then(notes => {
+      res.status(200).json({
+        message: `[STATUS] Get notes for client ID ${clientId}`,
+        data: notes,
+      })
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "[ERROR] Error fetching client notes",
+        error: error.message,
+      });
+    });
+};
+  
 const createClient = (req, res) => {
   const clientData = req.body;
   Client.create(clientData)
@@ -66,4 +104,4 @@ const deleteClient = (req, res) => {
     });
 };
 
-export { getAllClients, getClientById, createClient, updateClient, deleteClient };
+export { getAllClients, getClientById, getClientOpportunities, getClientNotes, createClient, updateClient, deleteClient };

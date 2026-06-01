@@ -11,6 +11,17 @@ export const getClients = async () => {
   return results.data;
 };
 
+export const getClientById = async (clientId) => {
+  const response = await fetch(`/api/clients/${clientId}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch client');
+  }
+
+  const result = await response.json();
+
+  return result.data;
+};
+
 export const createClient = async (clientData) => {
   const response = await fetch('/api/clients', {
     method: 'POST',
@@ -59,4 +70,26 @@ export const updateClient = async (clientId, clientData) => {
   const result = await response.json();
 
   return result.data;
+};
+
+export const getClientOpportunities = async (clientId) => {
+  const response = await fetch(`/api/clients/${clientId}/opportunities`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch client opportunities');
+  }
+
+  const results = await response.json();
+
+  return results.data;
+};
+
+export const getClientNotes = async (clientId) => {
+  const response = await fetch(`/api/clients/${clientId}/notes`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch client notes');
+  }
+
+  const results = await response.json();
+
+  return results.data;
 };

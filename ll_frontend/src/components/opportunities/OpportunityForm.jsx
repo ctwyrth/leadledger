@@ -19,7 +19,6 @@ export const OpportunityForm = ({ onCreateOpportunity, onUpdateOpportunity, edit
         value: editingOpportunity.value || '',
         stage: editingOpportunity.stage || 'new'
       });
-      // setFormData(editingOpportunity); --- IGNORE ---
     }
   
     if (!editingOpportunity && clients.length && !formData.client) {
@@ -43,11 +42,11 @@ export const OpportunityForm = ({ onCreateOpportunity, onUpdateOpportunity, edit
       onCreateOpportunity(formData);
     }
 
-    setFormData({ title: '', client: clients.length ? clients[0]._id : '', value: '', stage: 'new' }); // reset form
+    setFormData({ title: '', client: '', value: '', stage: 'new' }); // reset form
   };
 
   const onCancel = () => {
-    setFormData({ title: '', client: clients.length ? clients[0]._id : '', value: '', stage: 'new' }); // reset form
+    setFormData({ title: '', client: '', value: '', stage: 'new' }); // reset form
   };
 
   return (
@@ -83,7 +82,7 @@ export const OpportunityForm = ({ onCreateOpportunity, onUpdateOpportunity, edit
           </select>
         </div>
         <button type="submit" className="button button-primary">{editingOpportunity ? 'Update Opportunity' : 'Add New Opportunity'}</button>
-        {editingOpportunity && <button type="button" className="button button-secondary" onClick={() => setFormData({ title: '', client: clients.length ? clients[0]._id : '', value: '', stage: 'new' })}>Cancel</button>}
+        {editingOpportunity && <button type="button" className="button button-secondary" onClick={onCancel}>Cancel</button>}
       </form>
     </section>
   );
