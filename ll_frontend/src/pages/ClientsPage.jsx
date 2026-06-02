@@ -7,12 +7,17 @@ import { ClientDetails } from './ClientDetails';
 import { getClients, createClient, deleteClient, updateClient } from '../api/clientApi';
 
 export const ClientsPage = () => {
-  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [clients, setClients] = useState([]);
   const [editingClient, setEditingClient] = useState(null);
   const [viewingClientId, setViewingClientId] = useState(null);
+  // search variables
+  const [clientSearch, setClientSearch] = useState('');
+  const [clientStatusFilter, setClientStatusFilter] = useState('all');
+  const [clientSort, setClientSort] = useState('name-asc');
 
+  // click handlers for client actions
   const handleViewClient = (clientId) => {
     setViewingClientId(clientId);
   };
@@ -59,6 +64,30 @@ export const ClientsPage = () => {
       });
   };
 
+  // search views / derived client lists
+  const displayedClients = [...clients]
+    .filter(client => {
+      const search = clientSearch.toLowerCase();
+      const name = (client.name || '').toLowerCase();
+
+      return name.includes(search);
+    })
+    .filter(client => {
+      if (clientStatusFilter === 'all') return true;
+
+      return client.status === clientStatusFilter;
+    })
+    .sort((a, b) => {
+      if (clientSort === 'name-asc') {
+        return a.name.localeCompare(b.name);
+      }
+      if (clientSort === 'name-desc') {
+        return b.name.localeCompare(a.name);
+      }
+
+      return 0;
+    });
+
   useEffect(() => {
     const loadClients = async () => {
       try {
@@ -87,7 +116,26 @@ export const ClientsPage = () => {
         <h2>Clients</h2>
         <div className="clients-sub">
           <ClientForm onCreateClient={handleCreateClient} onUpdateClient={handleUpdateClient} editingClient={editingClient} />
-          <ClientList clients={clients} onDeleteClient={handleDeleteClient} onEditClient={handleEditClient} onViewClient={handleViewClient} />
+          <div className="clients-list">
+            <section className="list-controls">
+              <input type="text" placeholder="Search clients..." value={clientSearch} onChange={(e) => setClientSearch(e.target.value)} />
+
+              <select value={clientStatusFilter} onChange={(e) => setClientStatusFilter(e.target.value)}>
+                <option value="all">All</option>
+                <option value="lead">Lead</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="lost">Lost</option>
+                <option value="archived">Archived</option>
+              </select>
+
+              <select value={clientSort} onChange={(e) => setClientSort(e.target.value)}>
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+              </select>
+            </section>
+            <ClientList clients={displayedClients} onDeleteClient={handleDeleteClient} onEditClient={handleEditClient} onViewClient={handleViewClient} />
+          </div>
         </div>
       </main>
     </>
