@@ -37,10 +37,11 @@ body {
   color: white;
   font-size: 14px;
   font-weight: bold;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.nav-button:hover {
+.nav-button:hover, .nav-button.inactive:hover {
   background-color: white;
   color: midnightblue;
 }
@@ -50,10 +51,11 @@ body {
   color: midnightblue;
 }
 
-/* .nav-button.inactive {
-  background-color: #ccc;
-  color: #666;
-} */
+.nav-button.inactive {
+  border: 1px solid #dcdcdc;
+  background-color: transparent;
+  color: #dcdcdc;
+}
 
 .clients-page, .opportunities-page, .dashboard-page, .notes-page {
   min-height: 100vh;

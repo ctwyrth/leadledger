@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { ClientList } from '../components/clients/ClientList';
 import { ClientForm } from '../components/clients/ClientForm';
-import { ClientDetails } from './ClientDetails';
 import { getClients, createClient, deleteClient, updateClient } from '../api/clientApi';
 
 export const ClientsPage = () => {
@@ -11,20 +10,13 @@ export const ClientsPage = () => {
   const [error, setError] = useState(null);
   const [clients, setClients] = useState([]);
   const [editingClient, setEditingClient] = useState(null);
-  const [viewingClientId, setViewingClientId] = useState(null);
+
   // search variables
   const [clientSearch, setClientSearch] = useState('');
   const [clientStatusFilter, setClientStatusFilter] = useState('all');
   const [clientSort, setClientSort] = useState('name-asc');
 
   // click handlers for client actions
-  const handleViewClient = (clientId) => {
-    setViewingClientId(clientId);
-  };
-
-  const handleBackToClients = () => {
-    setViewingClientId(null);
-  };
 
   const handleCreateClient = (clientData) => {
     createClient(clientData)
@@ -106,10 +98,6 @@ export const ClientsPage = () => {
   if (loading) return <div>Loading clients...</div>;
   if (error) return <div>{error}</div>;
 
-  if (viewingClientId) {
-    return <ClientDetails clientId={viewingClientId} onBack={handleBackToClients} />;
-  }
-
   return (
     <>
       <main className="clients-page">
@@ -134,7 +122,7 @@ export const ClientsPage = () => {
                 <option value="name-desc">Name (Z-A)</option>
               </select>
             </section>
-            <ClientList clients={displayedClients} onDeleteClient={handleDeleteClient} onEditClient={handleEditClient} onViewClient={handleViewClient} />
+            <ClientList clients={displayedClients} onDeleteClient={handleDeleteClient} onEditClient={handleEditClient} />
           </div>
         </div>
       </main>

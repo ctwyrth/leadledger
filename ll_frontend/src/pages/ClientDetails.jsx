@@ -1,8 +1,12 @@
 // gather and display client details, including associated opportunities and notes
 import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+
 import { getClientById, getClientOpportunities, getClientNotes } from '../api/clientApi';
 
-export const ClientDetails = ({ clientId, onBack }) => {
+export const ClientDetails = () => {
+  const { clientId } = useParams();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [client, setClient] = useState(null);
@@ -66,13 +70,11 @@ export const ClientDetails = ({ clientId, onBack }) => {
       ) : (
         <ul>
           {notes.map((note) => (
-            <>
-              <li key={note._id} >{note.body} - {new Date(note.createdAt).toLocaleDateString()}</li>
-            </>
+            <li key={note._id} >{note.body} - {new Date(note.createdAt).toLocaleDateString()}</li>
           ))}
         </ul>
       )}
-      <button onClick={onBack}>Back to Clients</button>
+      <button type="button" onClick={() => navigate('/clients')}>Back to Clients</button>
     </section>
   );
 };
