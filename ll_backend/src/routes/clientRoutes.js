@@ -1,7 +1,10 @@
 import express from "express";
+
 import { getAllClients, getClientById, getClientOpportunities, getClientNotes, createClient, updateClient, deleteClient } from "../controllers/clientController.js";
+import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+router.use(protect)
 
 router.get("/", getAllClients);
 

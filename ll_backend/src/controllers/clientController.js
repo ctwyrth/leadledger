@@ -5,7 +5,7 @@ import Note from '../models/Note.js';
 // setting up controllers for client routes
 const getAllClients = (req, res) => {
   // console.log("Hit the sever endpoint for getting all clients");
-  Client.find()
+  Client.find({ user: req.user._id })
     .then(clients => {
       res.status(200).json({ message: "[STATUS] Get all clients", data: clients });
     })
@@ -15,13 +15,15 @@ const getAllClients = (req, res) => {
 };
 
 const getClientById = (req, res) => {
-  const clientId = req.params.id;
-  Client.findById(clientId)
+  Client.findOne({
+    _id: req.params.id,
+    user: req.user._id,
+  })
     .then(client => {
       if (!client) {
         return res.status(404).json({ message: "[ERROR] Client not found" });
       }
-      res.status(200).json({ message: `[STATUS] Get client by ID ${clientId}`, data: client });
+      res.status(200).json({ message: `[STATUS] Get client by ID ${_id}`, data: client });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error fetching client", error: error.message });
@@ -29,12 +31,13 @@ const getClientById = (req, res) => {
 };
 
 const getClientOpportunities = (req, res) => {
-  const clientId = req.params.id;
-  
-  Opportunity.find({ client: clientId })
+  Opportunity.find({
+    _id: req.params._id,
+    user: req.user._id,
+  })
     .then(opportunities => {
       res.status(200).json({
-        message: `[STATUS] Get opportunities for client ID ${clientId}`,
+        message: `[STATUS] Get opportunities for client ID ${_id}`,
         data: opportunities,
       })
     })
@@ -47,12 +50,13 @@ const getClientOpportunities = (req, res) => {
 };
 
 const getClientNotes = (req, res) => {
-  const clientId = req.params.id;
-  
-  Note.find({ client: clientId })
+  Note.find({
+    _id: req.params._id,
+    user: req.user._id,
+  })
     .then(notes => {
       res.status(200).json({
-        message: `[STATUS] Get notes for client ID ${clientId}`,
+        message: `[STATUS] Get notes for client ID ${_id}`,
         data: notes,
       })
     })
@@ -65,8 +69,10 @@ const getClientNotes = (req, res) => {
 };
   
 const createClient = (req, res) => {
-  const clientData = req.body;
-  Client.create(clientData)
+  Client.create({
+    ...req.body,
+    user: req.user._id,
+  })
     .then(client => {
       res.status(201).json({ message: "[STATUS] Client created", data: client });
     })
@@ -76,14 +82,22 @@ const createClient = (req, res) => {
 };
 
 const updateClient = (req, res) => {
-  const clientId = req.params.id;
-  const updatedData = req.body;
-  Client.findByIdAndUpdate(clientId, updatedData, { returnDocument: "after", runValidators: true })
+  const { user: ignoredUser, ...updateData } = req.body
+
+  Client.findOneAndUpdate({
+    _id: req.params._id,
+    user: req.user._id,
+  },
+  updateData,
+  {
+    returnDocument: "after",
+    runValidators: true,
+  })
     .then(client => {
       if (!client) {
         return res.status(404).json({ message: "[ERROR] Client not found" });
       }
-      res.status(200).json({ message: `[STATUS] Client updated with ID ${clientId}`, data: client });
+      res.status(200).json({ message: `[STATUS] Client updated with ID ${_id}`, data: client });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error updating client", error: error.message });
@@ -91,13 +105,15 @@ const updateClient = (req, res) => {
 };
 
 const deleteClient = (req, res) => {
-  const clientId = req.params.id;
-  Client.findByIdAndDelete(clientId)
+  Client.findOneAndDelete({
+    _id: req.params._id,
+    user: req.user._id,
+  })
     .then((client) => {
       if (!client) {
         return res.status(404).json({ message: "[ERROR] Client not found" });
       }
-      res.status(200).json({ message: `[STATUS] Client deleted with ID ${clientId}`, data: client });
+      res.status(200).json({ message: `[STATUS] Client deleted with ID ${_id}`, data: client });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error deleting client", error: error.message });
