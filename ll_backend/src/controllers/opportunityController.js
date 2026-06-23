@@ -3,7 +3,7 @@ import Opportunity from "../models/Opportunity.js";
 // setting up controllers for opportunity routes
 const getAllOpportunities = (req, res) => {
   // console.log("Hit the sever endpoint for getting all opportunities");
-  Opportunity.find().populate('client') // Populate the client field with client details
+  Opportunity.find({ user: req.user._id }).populate('client') // Populate the client field with client details
     .then(opportunities => {
       res.status(200).json({ message: "[STATUS] Get all opportunities", data: opportunities });
     })
@@ -12,14 +12,16 @@ const getAllOpportunities = (req, res) => {
     });
 };
 
-const getOpportunityById = (req, res) => {
-  const opportunityId = req.params.id;
-  Opportunity.findById(opportunityId).populate('client') // Populate the client field with client details
+const getOpportunity = (req, res) => {
+  Opportunity.findOne({
+    _id: req.params.id,
+    user: req.user._id,
+  }).populate('client') // Populate the client field with client details
     .then(opportunity => {
       if (!opportunity) {
         return res.status(404).json({ message: "[ERROR] Opportunity not found" });
       }
-      res.status(200).json({ message: `[STATUS] Get opportunity by ID ${opportunityId}`, data: opportunity });
+      res.status(200).json({ message: `[STATUS] Get opportunity by ID ${req.params.id}`, data: opportunity });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error fetching opportunity", error: error.message });
@@ -27,8 +29,10 @@ const getOpportunityById = (req, res) => {
 };
 
 const createOpportunity = (req, res) => {
-  const opportunityData = req.body;
-  Opportunity.create(opportunityData)
+  Opportunity.create({
+    ...opportunityData,
+    user: req.user._id,
+  })
     .then(opportunity => {
       res.status(201).json({ message: "[STATUS] Opportunity created", data: opportunity });
     })
@@ -38,14 +42,21 @@ const createOpportunity = (req, res) => {
 };
 
 const updateOpportunity = (req, res) => {
-  const opportunityId = req.params.id;
-  const updatedData = req.body;
-  Opportunity.findByIdAndUpdate(opportunityId, updatedData, { returnDocument: "after", runValidators: true })
+  const { user, ...updateData } = req.body;
+  Opportunity.findOneAndUpdate({
+    _id: req.params.id,
+    user: req.user._id,
+  },
+  updateData,
+  {
+    returnDocument: "after",
+    runValidators: true
+  })
     .then(opportunity => {
       if (!opportunity) {
         return res.status(404).json({ message: "[ERROR] Opportunity not found" });
       }
-      res.status(200).json({ message: `[STATUS] Opportunity updated with ID ${opportunityId}`, data: opportunity });
+      res.status(200).json({ message: `[STATUS] Opportunity updated with ID ${req.params.id}`, data: opportunity });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error updating opportunity", error: error.message });
@@ -53,17 +64,19 @@ const updateOpportunity = (req, res) => {
 };
 
 const deleteOpportunity = (req, res) => {
-  const opportunityId = req.params.id;
-  Opportunity.findByIdAndDelete(opportunityId)
+  Opportunity.findOneAndDelete({
+    _id: req.params.id,
+    user: req.user._id,
+  })
     .then((opportunity) => {
       if (!opportunity) {
         return res.status(404).json({ message: "[ERROR] Opportunity not found" });
       }
-      res.status(200).json({ message: `[STATUS] Opportunity deleted with ID ${opportunityId}`, data: opportunity });
+      res.status(200).json({ message: `[STATUS] Opportunity deleted with ID ${req.params.id}`, data: opportunity });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error deleting opportunity", error: error.message });
     });
 };
 
-export { getAllOpportunities, getOpportunityById, createOpportunity, updateOpportunity, deleteOpportunity };
+export { getAllOpportunities, getOpportunity, createOpportunity, updateOpportunity, deleteOpportunity };

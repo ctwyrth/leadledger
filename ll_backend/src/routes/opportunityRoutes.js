@@ -8,7 +8,7 @@ router.use(protect)
 
 router.get("/", getAllOpportunities);
 
-router.get("/:id", getOpportunityById);
+router.get("/:id", getOpportunity);
 
 router.post("/", createOpportunity);
 

@@ -14,7 +14,7 @@ const getAllClients = (req, res) => {
     });
 };
 
-const getClientById = (req, res) => {
+const getClient = (req, res) => {
   Client.findOne({
     _id: req.params.id,
     user: req.user._id,
@@ -23,7 +23,7 @@ const getClientById = (req, res) => {
       if (!client) {
         return res.status(404).json({ message: "[ERROR] Client not found" });
       }
-      res.status(200).json({ message: `[STATUS] Get client by ID ${_id}`, data: client });
+      res.status(200).json({ message: `[STATUS] Get client by ID ${req.params.id}`, data: client });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error fetching client", error: error.message });
@@ -32,12 +32,12 @@ const getClientById = (req, res) => {
 
 const getClientOpportunities = (req, res) => {
   Opportunity.find({
-    _id: req.params._id,
+    _id: req.params.id,
     user: req.user._id,
   })
     .then(opportunities => {
       res.status(200).json({
-        message: `[STATUS] Get opportunities for client ID ${_id}`,
+        message: `[STATUS] Get opportunities for client ID ${req.params.id}`,
         data: opportunities,
       })
     })
@@ -51,12 +51,12 @@ const getClientOpportunities = (req, res) => {
 
 const getClientNotes = (req, res) => {
   Note.find({
-    _id: req.params._id,
+    _id: req.params.id,
     user: req.user._id,
   })
     .then(notes => {
       res.status(200).json({
-        message: `[STATUS] Get notes for client ID ${_id}`,
+        message: `[STATUS] Get notes for client ID ${req.params.id}`,
         data: notes,
       })
     })
@@ -85,7 +85,7 @@ const updateClient = (req, res) => {
   const { user: ignoredUser, ...updateData } = req.body
 
   Client.findOneAndUpdate({
-    _id: req.params._id,
+    _id: req.params.id,
     user: req.user._id,
   },
   updateData,
@@ -97,7 +97,7 @@ const updateClient = (req, res) => {
       if (!client) {
         return res.status(404).json({ message: "[ERROR] Client not found" });
       }
-      res.status(200).json({ message: `[STATUS] Client updated with ID ${_id}`, data: client });
+      res.status(200).json({ message: `[STATUS] Client updated with ID ${req.params.id}`, data: client });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error updating client", error: error.message });
@@ -106,18 +106,18 @@ const updateClient = (req, res) => {
 
 const deleteClient = (req, res) => {
   Client.findOneAndDelete({
-    _id: req.params._id,
+    _id: req.params.id,
     user: req.user._id,
   })
     .then((client) => {
       if (!client) {
         return res.status(404).json({ message: "[ERROR] Client not found" });
       }
-      res.status(200).json({ message: `[STATUS] Client deleted with ID ${_id}`, data: client });
+      res.status(200).json({ message: `[STATUS] Client deleted with ID ${req.params.id}`, data: client });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error deleting client", error: error.message });
     });
 };
 
-export { getAllClients, getClientById, getClientOpportunities, getClientNotes, createClient, updateClient, deleteClient };
+export { getAllClients, getClient, getClientOpportunities, getClientNotes, createClient, updateClient, deleteClient };

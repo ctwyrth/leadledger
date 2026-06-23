@@ -1,7 +1,7 @@
 import Note from "../models/Note.js";
 
 const getAllNotes = (req, res) => {
-  Note.find().populate('client').populate('opportunity')
+  Note.find({ user: req.user._id }).populate('client').populate('opportunity')
     .then(notes => {
       res.status(200).json({ message: "[STATUS] Get all notes", data: notes });
     })
@@ -10,14 +10,16 @@ const getAllNotes = (req, res) => {
     });
 };
 
-const getNoteById = (req, res) => {
-  const noteId = req.params.id;
-  Note.findById(noteId).populate('client').populate('opportunity')
+const getNote = (req, res) => {
+  Note.findOne({
+    _id: req.params.id,
+    user: req.user._id,
+  }).populate('client').populate('opportunity')
     .then(note => {
       if (!note) {
         return res.status(404).json({ message: "[ERROR] Note not found" });
       }
-      res.status(200).json({ message: `[STATUS] Get note by ID ${noteId}`, data: note });
+      res.status(200).json({ message: `[STATUS] Get note by ID ${req.params.id}`, data: note });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error fetching note", error: error.message });
@@ -25,8 +27,10 @@ const getNoteById = (req, res) => {
 };
 
 const createNote = (req, res) => {
-  const noteData = req.body;
-  Note.create(noteData)
+  Note.create({
+    ...noteData,
+    user: req.user._id,
+  })
     .then(note => {
       res.status(201).json({ message: "[STATUS] Note created", data: note });
     })
@@ -36,14 +40,22 @@ const createNote = (req, res) => {
 };
 
 const updateNote = (req, res) => {
-  const noteId = req.params.id;
-  const updatedData = req.body;
-  Note.findByIdAndUpdate(noteId, updatedData, { returnDocument: "after", runValidators: true })
+  const { user, ...updateData } = req.body;
+
+  Note.findOneAndUpdate({
+    _id: req.params.id,
+    user: req.user._id,
+  },
+  updatedData,
+  {
+    returnDocument: "after",
+    runValidators: true
+  })
     .then(note => {
       if (!note) {
         return res.status(404).json({ message: "[ERROR] Note not found" });
       }
-      res.status(200).json({ message: `[STATUS] Note updated with ID ${noteId}`, data: note });
+      res.status(200).json({ message: `[STATUS] Note updated with ID ${req.params.id}`, data: note });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error updating note", error: error.message });
@@ -51,17 +63,19 @@ const updateNote = (req, res) => {
 };
 
 const deleteNote = (req, res) => {
-  const noteId = req.params.id;
-  Note.findByIdAndDelete(noteId)
+  Note.findOneAndDelete({
+    _id: req.params.id,
+    user: req.user._id,
+  })
     .then((note) => {
       if (!note) {
         return res.status(404).json({ message: "[ERROR] Note not found" });
       }
-      res.status(200).json({ message: `[STATUS] Note deleted with ID ${noteId}`, data: note });
+      res.status(200).json({ message: `[STATUS] Note deleted with ID ${req.params.id}`, data: note });
     })
     .catch(error => {
       res.status(500).json({ message: "[ERROR] Error deleting note", error: error.message });
     });
 };
 
-export { getAllNotes, getNoteById, createNote, updateNote, deleteNote };
+export { getAllNotes, getNote, createNote, updateNote, deleteNote };
