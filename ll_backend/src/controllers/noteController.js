@@ -28,7 +28,7 @@ const getNote = (req, res) => {
 
 const createNote = (req, res) => {
   Note.create({
-    ...noteData,
+    ...req.body,
     user: req.user._id,
   })
     .then(note => {

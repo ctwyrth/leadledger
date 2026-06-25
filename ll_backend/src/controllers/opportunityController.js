@@ -30,7 +30,7 @@ const getOpportunity = (req, res) => {
 
 const createOpportunity = (req, res) => {
   Opportunity.create({
-    ...opportunityData,
+    ...req.body,
     user: req.user._id,
   })
     .then(opportunity => {
